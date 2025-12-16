@@ -2,713 +2,429 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f2f5f1">
   <title>Quadro de Horários</title>
+  
+  <link rel="manifest" href="manifest.json">
+  
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  
   <style>
 :root {
-  --cor-fundo: #f2f6f0;
-  --cor-texto: #2b3a2e;
-  --cor-borda: #a3b18a;
-  --cor-input-bg: #ffffff;
-  --cor-input-border: #889977;
-  --cor-primary: #4a5d23;
-  --cor-primary-dark: #37481a;
-  --cor-secundaria: #6e7f4c;
-  --cor-legenda-bg: #d6e1c7;
+  --cor-fundo: #f2f5f1;
+  --cor-surface: #ffffff;
+  --cor-texto-pri: #3a4a3b;
+  --cor-texto-sec: #758576;
+  --cor-destaque: #7c9a6f;
+  --cor-destaque-hover: #5e7a53;
+  --cor-perigo: #d66d6d;
+  --cor-input: #f7f9f7;
+  --sombra: 0 8px 30px rgba(0,0,0,0.04);
+  --borda: rgba(0,0,0,0.05);
+  --raio-grande: 24px;
+  --raio-medio: 16px;
 }
-    * {
-      box-sizing: border-box;
-      font-family: 'Inter', sans-serif;
-    }
-    body {
-      margin: 30px 20px 60px;
-      background: var(--cor-fundo);
-      color: var(--cor-texto);
-      user-select: none;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    h1 {
-      font-weight: 700;
-      font-size: 2.1rem;
-      margin-bottom: 36px;
-      color: var(--cor-primary-dark);
-      user-select: text;
-      text-align: center;
-    }
-    /* Formulário agora flexível, duas colunas lado a lado */
-    form#formCadastro {
-      max-width: 900px;
-      width: 100%;
-      display: flex;
-      gap: 40px;
-      flex-wrap: wrap;
-      justify-content: center;
-      user-select: text;
-      margin-bottom: 48px;
-    }
-    /* Blocos internos do form */
-    .form-bloco {
-      flex: 1 1 400px;
-      min-width: 320px;
-      background: var(--cor-input-bg);
-      padding: 24px 28px;
-      border-radius: 12px;
-      box-shadow: 0 3px 12px rgb(0 0 0 / 0.08);
-      border: 1px solid var(--cor-borda);
-      display: flex;
-      flex-direction: column;
-    }
-    .form-bloco h2 {
-      font-weight: 700;
-      font-size: 1.6rem;
-      color: var(--cor-primary);
-      margin-bottom: 24px;
-      text-align: center;
-      user-select: text;
-    }
-    .campo-cadastro {
-      display: flex;
-      flex-direction: column;
-      margin-bottom: 18px;
-    }
-    .campo-cadastro label {
-      font-weight: 600;
-      font-size: 1rem;
-      color: var(--cor-secundaria);
-      margin-bottom: 6px;
-      user-select: text;
-    }
-    .campo-cadastro input[type="text"],
-    .campo-cadastro input[type="color"],
-    .campo-cadastro select,
-    .campo-cadastro input[type="time"] {
-      padding: 12px 14px;
-      font-size: 1rem;
-      border-radius: 8px;
-      border: 1.8px solid var(--cor-input-border);
-      background: var(--cor-input-bg);
-      color: var(--cor-texto);
-      transition: border-color 0.25s ease;
-      outline-offset: 2px;
-      outline-color: transparent;
-      user-select: text;
-    }
-    .campo-cadastro input[type="text"]::placeholder {
-      font-style: italic;
-      color: #94a3b8;
-    }
-    .campo-cadastro input[type="text"]:focus,
-    .campo-cadastro input[type="color"]:focus,
-    .campo-cadastro select:focus,
-    .campo-cadastro input[type="time"]:focus {
-      border-color: var(--cor-primary);
-      outline-color: var(--cor-primary);
-    }
 
-    /* Aumento do input cor da matéria */
-    #corMateria {
-      width: 370px;       /* aumenta a largura */
-      height: 50px;      /* aumenta a altura */
-      cursor: pointer;   /* cursor de mãozinha */
-      padding: 0;
-      border-radius: 8px;
-      border: 1.8px solid var(--cor-input-border);
-      transition: border-color 0.25s ease;
-      outline-offset: 2px;
-      outline-color: transparent;
-    }
-    #corMateria:focus {
-      border-color: var(--cor-primary);
-      outline-color: var(--cor-primary);
-    }
+body.modo-escuro {
+  --cor-fundo: #121212;
+  --cor-surface: #1e1e1e;
+  --cor-texto-pri: #e0e0e0;
+  --cor-texto-sec: #a0a0a0;
+  --cor-destaque: #8fb87d; 
+  --cor-destaque-hover: #a3cc91;
+  --cor-input: #2c2c2c;
+  --sombra: 0 8px 30px rgba(0,0,0,0.3);
+  --borda: rgba(255,255,255,0.1);
+}
 
-    /* Botões dentro do formulário - largura 100% do bloco */
-    button#btnAdicionarMateria,
-    button#btnAdicionarAula {
-      background-color: var(--cor-primary);
-      color: white;
-      font-weight: 700;
-      font-size: 1.1rem;
-      border: none;
-      border-radius: 10px;
-      padding: 14px 0;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-      user-select: none;
-      width: 100%;
-      margin-top: auto;
-      align-self: center;
-    }
-    button#btnAdicionarMateria:hover,
-    button#btnAdicionarAula:hover {
-      background-color: var(--cor-primary-dark);
-    }
+* { box-sizing: border-box; font-family: 'Inter', sans-serif; outline: none; -webkit-tap-highlight-color: transparent; }
 
-    /* Container principal do quadro */
-    .quadro-container {
-      max-width: 900px;
-      width: 100%;
-      background: var(--cor-input-bg);
-      border-radius: 12px;
-      padding: 24px 32px;
-      box-shadow: 0 3px 12px rgb(0 0 0 / 0.08);
-      border: 1px solid var(--cor-borda);
-      user-select: none;
-      margin-bottom: 32px;
-    }
-    .quadro-container h2 {
-      font-weight: 700;
-      font-size: 1.7rem;
-      color: var(--cor-primary);
-      margin-top: 0;
-      margin-bottom: 20px;
-      user-select: text;
-      text-align: center;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      box-shadow: 0 3px 12px rgb(0 0 0 / 0.05);
-      border-radius: 12px;
-      overflow: hidden;
-      background: var(--cor-input-bg);
-      user-select: text;
-      font-size: 0.87rem;
-    }
-    th, td {
-      border: 1px solid var(--cor-borda);
-      padding: 10px 6px;
-      text-align: center;
-      vertical-align: middle;
-      position: relative;
-      line-height: 1.2;
-      user-select: text;
-      word-break: break-word;
-    }
-    th {
-      background-color: var(--cor-legenda-bg);
-      font-weight: 700;
-      color: var(--cor-primary-dark);
-      text-transform: uppercase;
-      user-select: text;
-      font-size: 0.85rem;
-    }
-    td:first-child {
-      background-color: #f1f5f9;
-      font-weight: 600;
-      color: var(--cor-secundaria);
-      width: 90px;
-      user-select: text;
-    }
-    .aula {
-      position: absolute;
-      top: 4px;
-      left: 4px;
-      right: 4px;
-      bottom: 4px;
-      border-radius: 8px;
-      color: white;
-      font-weight: 700;
-      font-size: 0.78rem;
-      line-height: 1.1;
-      padding: 6px 6px;
-      text-transform: uppercase;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      box-shadow: 0 2px 6px rgb(0 0 0 / 0.18);
-      cursor: default;
-      white-space: normal;
-      word-break: break-word;
-      overflow-wrap: break-word;
-      user-select: text;
-    }
+body {
+  margin: 0; padding: 40px 20px;
+  background: var(--cor-fundo); color: var(--cor-texto-pri);
+  min-height: 100vh; display: flex; flex-direction: column; align-items: center;
+  transition: background 0.3s ease, color 0.3s ease;
+}
 
-    /* Legenda cores */
-    .legenda {
-      margin-top: 28px;
-      max-width: 900px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 22px;
-      justify-content: center;
-      font-size: 0.9rem;
-      color: var(--cor-secundaria);
-      user-select: text;
-    }
-    .legenda-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      min-width: 200px;
-      user-select: text;
-    }
-    .legenda-cor {
-      width: 30px;
-      height: 25px;
-      border-radius: 6px;
-      user-select: none;
-    }
+header { width: 100%; max-width: 1000px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
+h1 { font-weight: 700; font-size: 1.8rem; margin: 0; letter-spacing: -0.5px; }
 
-    /* Container para botões export/import/pdf */
-    .acoes-container {
-      margin-top: 30px;
-      max-width: 900px;
-      width: 100%;
-      display: flex;
-      gap: 14px;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
+.btn-icone {
+  width: 44px; height: 44px; border-radius: 50%; border: none;
+  background: var(--cor-surface); color: var(--cor-texto-pri);
+  box-shadow: var(--sombra); cursor: pointer;
+  display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
+  transition: transform 0.2s;
+}
+.btn-icone:hover { transform: scale(1.1); }
 
-    /* Responsive */
-    @media (max-width: 760px) {
-      form#formCadastro {
-        flex-direction: column;
-      }
-      .form-bloco {
-        min-width: 100%;
-      }
-      button#btnAdicionarMateria,
-      button#btnAdicionarAula,
-      button#btnExportarJSON,
-      button#btnImportarJSON,
-      button#btnGerarPDF {
-        flex-basis: 100%;
-        min-width: unset;
-      }
-    }
+.container-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 25px; max-width: 1000px; width: 100%; margin-bottom: 30px;
+}
+
+.cartao {
+  background: var(--cor-surface); padding: 28px; border-radius: var(--raio-grande);
+  box-shadow: var(--sombra); border: 1px solid var(--borda);
+}
+
+.grupo-input label { display: block; font-size: 0.85rem; font-weight: 600; color: var(--cor-texto-sec); margin-bottom: 8px; }
+input, select {
+  width: 100%; padding: 14px; font-size: 0.95rem; background: var(--cor-input);
+  border: 1px solid transparent; border-radius: var(--raio-medio); color: var(--cor-texto-pri); margin-bottom: 16px;
+}
+input:focus, select:focus { border-color: var(--cor-destaque); background: var(--cor-surface); }
+
+.seletor-cor {
+  display: flex; align-items: center; gap: 12px; padding: 10px; background: var(--cor-input);
+  border-radius: var(--raio-medio); cursor: pointer; margin-bottom: 16px;
+}
+.bolha-cor { width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--cor-surface); }
+
+.btn-primario {
+  width: 100%; padding: 16px; border: none; border-radius: 50px; font-weight: 600;
+  background: var(--cor-destaque); color: #fff; cursor: pointer;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1); transition: 0.2s; font-size: 1rem;
+}
+.btn-primario:hover { transform: translateY(-2px); background: var(--cor-destaque-hover); }
+
+.container-quadro {
+  max-width: 1100px; width: 100%; background: var(--cor-surface);
+  padding: 30px; border-radius: var(--raio-grande); box-shadow: var(--sombra);
+  overflow: hidden; margin-bottom: 30px; border: 1px solid var(--borda);
+}
+.scroll-tabela { overflow-x: auto; padding-bottom: 10px; }
+table { width: 100%; min-width: 700px; border-collapse: separate; border-spacing: 0; }
+th { padding: 15px; color: var(--cor-texto-sec); font-size: 0.8rem; text-transform: uppercase; border-bottom: 1px solid var(--borda); }
+td { padding: 6px; border-bottom: 1px dashed var(--borda); height: 1px; vertical-align: middle; }
+td:first-child { width: 90px; text-align: center; font-weight: 600; color: var(--cor-destaque); border-right: 1px solid var(--borda); }
+
+.bloco-aula {
+  height: 90%; border-radius: 12px; color: #fff; padding: 8px; font-size: 0.85rem;
+  display: flex; flex-direction: column; justify-content: center; text-align: center;
+  cursor: pointer; transition: 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.15); font-weight: 600;
+}
+.bloco-aula:hover { transform: scale(1.03); z-index: 5; }
+
+.painel-ferramentas {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px;
+  width: 100%; max-width: 1000px; margin-top: 10px;
+}
+.btn-ferramenta {
+  background: var(--cor-surface); padding: 15px; border-radius: var(--raio-medio);
+  border: 1px solid var(--borda); color: var(--cor-texto-pri); cursor: pointer;
+  font-weight: 600; display: flex; flex-direction: column; align-items: center; gap: 8px;
+  box-shadow: var(--sombra); transition: 0.2s;
+}
+.btn-ferramenta:hover { background: var(--cor-input); transform: translateY(-2px); color: var(--cor-destaque); }
+.icone-btn { font-size: 1.5rem; }
+
+.modal-fundo {
+  position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.5);
+  display: none; align-items: center; justify-content: center; z-index: 100; backdrop-filter: blur(4px);
+}
+.modal-conteudo { background: var(--cor-surface); padding: 30px; border-radius: 24px; width: 90%; max-width: 380px; box-shadow: 0 20px 50px rgba(0,0,0,0.3); }
+.modal-titulo { font-size: 1.2rem; font-weight: 700; margin-bottom: 10px; }
+.btn-fechar { background: transparent; border: 1px solid var(--borda); color: var(--cor-texto-sec); padding: 10px 20px; border-radius: 30px; cursor: pointer; margin-right: 10px;}
+.btn-excluir { background: var(--cor-perigo); color: white; border: none; padding: 10px 20px; border-radius: 30px; cursor: pointer; }
+
+.notificacao {
+  position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px);
+  background: var(--cor-texto-pri); color: var(--cor-surface); padding: 12px 24px;
+  border-radius: 50px; font-weight: 500; transition: 0.4s; opacity: 0; z-index: 200;
+}
+.notificacao.visivel { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+@media(max-width: 768px) { header { flex-direction: column; gap: 15px; } }
   </style>
 </head>
 <body>
-  <h1>Quadro de Horários</h1>
 
-  <form id="formCadastro" aria-label="Formulário para cadastrar matérias e aulas">
-    <div class="form-bloco">
-      <h2>Cadastro de Matéria</h2>
-      <div class="campo-cadastro">
-        <label for="codigoMateria">Código da Matéria:</label>
-        <input type="text" id="codigoMateria" placeholder="Ex: EXA704" maxlength="10" aria-required="true" />
+  <header>
+    <h1>Planejador</h1>
+    <button class="btn-icone" onclick="alternarTema()" title="Alternar Tema">🌗</button>
+  </header>
+
+  <div class="container-grid">
+    <div class="cartao">
+      <h2>Nova Matéria</h2>
+      <div class="grupo-input">
+        <label>Nome da Matéria</label>
+        <input type="text" id="inputNomeMateria" placeholder="Ex: Algoritmos I">
       </div>
-      <div class="campo-cadastro">
-        <label for="nomeMateria">Nome da Matéria:</label>
-        <input type="text" id="nomeMateria" placeholder="Nome completo" maxlength="50" aria-required="true" />
+      <div class="seletor-cor" onclick="document.getElementById('inputCorMateria').click()">
+        <div id="visualizacaoCor" class="bolha-cor" style="background:#7c9a6f"></div>
+        <span style="font-size:0.9rem; color:var(--cor-texto-sec)">Toque para escolher a cor</span>
+        <input type="color" id="inputCorMateria" value="#7c9a6f" style="opacity:0; width:0; height:0;">
       </div>
-      <div class="campo-cadastro">
-        <label for="corMateria">Cor da Matéria (opcional):</label>
-        <input type="color" id="corMateria" value="#4f46e5" aria-label="Escolher cor da matéria" />
-      </div>
-      <button type="button" id="btnAdicionarMateria" aria-label="Adicionar Matéria">Adicionar Matéria</button>
+      <button class="btn-primario" onclick="adicionarMateria()">+ Criar Matéria</button>
     </div>
 
-    <div class="form-bloco">
-      <h2>Adicionar Aula</h2>
-      <div class="campo-cadastro">
-        <label for="selectCodigo">Código da Matéria:</label>
-        <select id="selectCodigo" aria-required="true">
-          <option value="">Selecione uma matéria</option>
-        </select>
+    <div class="cartao">
+      <h2>Agendar Aula</h2>
+      <div class="grupo-input">
+        <label>Selecione a Matéria</label>
+        <select id="selectMateria"><option value="">Lista vazia...</option></select>
       </div>
-      <div class="campo-cadastro">
-        <label for="professor">Professor(a):</label>
-        <input type="text" id="professor" placeholder="Nome do professor" maxlength="50" aria-required="true" />
-      </div>
-      <div class="campo-cadastro">
-        <label for="diaSemana">Dia da Semana:</label>
-        <select id="diaSemana" aria-required="true">
-          <option value="">Selecione</option>
-          <option value="Domingo">Domingo</option>
-          <option value="Segunda">Segunda</option>
-          <option value="Terça">Terça</option>
-          <option value="Quarta">Quarta</option>
-          <option value="Quinta">Quinta</option>
-          <option value="Sexta">Sexta</option>
+      <div class="grupo-input">
+        <label>Dia da Semana</label>
+        <select id="selectDia">
+          <option value="Segunda">Segunda-feira</option>
+          <option value="Terça">Terça-feira</option>
+          <option value="Quarta">Quarta-feira</option>
+          <option value="Quinta">Quinta-feira</option>
+          <option value="Sexta">Sexta-feira</option>
           <option value="Sábado">Sábado</option>
         </select>
       </div>
-      <div class="campo-cadastro">
-        <label for="inicioAula">Início:</label>
-        <input type="time" id="inicioAula" aria-required="true" />
+      <div style="display:flex; gap:15px">
+        <div class="grupo-input" style="flex:1"><label>Início</label><input type="time" id="inputInicio"></div>
+        <div class="grupo-input" style="flex:1"><label>Fim</label><input type="time" id="inputFim"></div>
       </div>
-      <div class="campo-cadastro">
-        <label for="fimAula">Término:</label>
-        <input type="time" id="fimAula" aria-required="true" />
-      </div>
-      <button type="button" id="btnAdicionarAula" aria-label="Adicionar Aula">Adicionar Aula</button>
+      <button class="btn-primario" onclick="agendarAula()">Agendar Horário</button>
     </div>
-  </form>
-
-  <div class="quadro-container" role="region" aria-label="Quadro de horários">
-    <h2>Quadro de Horários</h2>
-    <table id="tabelaHorarios" aria-describedby="legendaHorarios">
-      <thead>
-        <tr>
-          <th>Horário</th>
-          <th>Domingo</th>
-          <th>Segunda</th>
-          <th>Terça</th>
-          <th>Quarta</th>
-          <th>Quinta</th>
-          <th>Sexta</th>
-          <th>Sábado</th>
-        </tr>
-      </thead>
-      <tbody id="tabelaBody"></tbody>
-    </table>
-    <div id="legenda" class="legenda" aria-live="polite" aria-label="Legenda das matérias"></div>
   </div>
 
-  <div class="acoes-container">
-    <button id="btnExportarJSON" aria-label="Exportar dados em JSON">Exportar JSON</button>
-    <button id="btnImportarJSON" aria-label="Importar dados de JSON">Importar JSON</button>
-    <input type="file" id="inputImportJSON" accept="application/json" style="display:none" />
-    <button id="btnGerarPDF" aria-label="Gerar PDF do quadro de horários">Gerar PDF</button>
+  <div class="container-quadro" id="areaCaptura">
+    <div class="scroll-tabela">
+      <table id="tabelaPrincipal">
+        <thead>
+            <tr>
+                <th>Horário</th>
+                <th>Seg</th><th>Ter</th><th>Qua</th><th>Qui</th><th>Sex</th><th>Sáb</th>
+            </tr>
+        </thead>
+        <tbody id="corpoTabela"></tbody>
+      </table>
+    </div>
+    <div id="containerLegenda" style="display:flex; flex-wrap:wrap; gap:12px; margin-top:24px; justify-content:center;"></div>
   </div>
+
+  <div class="painel-ferramentas">
+    <button class="btn-ferramenta" onclick="exportarImagem()">
+      <span class="text-btn"> Baixar Imagem
+    </button>
+    <button class="btn-ferramenta" onclick="exportarPDF()">
+      <span class="text-btn">  Baixar PDF
+    </button>
+    <button class="btn-ferramenta" onclick="exportarJSON()">
+      <span class="text-btn">  Backup
+    </button>
+    <button class="btn-ferramenta" onclick="document.getElementById('inputImportar').click()">
+      <span class="text-btn"> Restaurar
+    </button>
+    <button class="btn-ferramenta" style="color:var(--cor-perigo); border-color:var(--cor-perigo)" onclick="limparTudo()">
+      <span class="text-btn"> Limpar Tudo
+    </button>
+  </div>
+  <input type="file" id="inputImportar" style="display:none" accept=".json" onchange="importarJSON(this)">
+
+  <div class="modal-fundo" id="modalEdicao" onclick="if(event.target===this) fecharModal()">
+    <div class="modal-conteudo">
+      <div class="modal-titulo" id="tituloModal">Detalhes</div>
+      <p id="descricaoModal" style="color:var(--cor-texto-sec); margin-bottom: 25px; line-height: 1.5;"></p>
+      <input type="hidden" id="idAulaSelecionada">
+      <div style="display: flex; justify-content: flex-end;">
+        <button class="btn-fechar" onclick="fecharModal()">Fechar</button>
+        <button class="btn-excluir" onclick="excluirAula()">Excluir Aula</button>
+      </div>
+    </div>
+  </div>
+  
+  <div class="notificacao" id="toast">Ação realizada</div>
 
   <script>
-    // Variáveis globais
-    let materias = {};
-    let aulas = [];
+    let dadosAgenda = { materias: {}, aulas: [] };
+    const diasSemana = ["Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
+    
+    document.getElementById('inputCorMateria').addEventListener('input', (e) => 
+      document.getElementById('visualizacaoCor').style.backgroundColor = e.target.value
+    );
 
-    const codigoMateriaInput = document.getElementById('codigoMateria');
-    const nomeMateriaInput = document.getElementById('nomeMateria');
-    const corMateriaInput = document.getElementById('corMateria');
-    const btnAdicionarMateria = document.getElementById('btnAdicionarMateria');
+    function inicializar() {
+      const salvo = localStorage.getItem('dadosViveri');
+      if(salvo) { dadosAgenda = JSON.parse(salvo); atualizarInterface(); }
+      
+      const temaSalvo = localStorage.getItem('temaPreferido');
+      if(temaSalvo === 'escuro') document.body.classList.add('modo-escuro');
+    }
+    
+    window.onload = inicializar;
 
-    const selectCodigo = document.getElementById('selectCodigo');
-    const professorInput = document.getElementById('professor');
-    const diaSemanaSelect = document.getElementById('diaSemana');
-    const inicioAulaInput = document.getElementById('inicioAula');
-    const fimAulaInput = document.getElementById('fimAula');
-    const btnAdicionarAula = document.getElementById('btnAdicionarAula');
-
-    const tabelaBody = document.getElementById('tabelaBody');
-    const legenda = document.getElementById('legenda');
-
-    const btnExportarJSON = document.getElementById('btnExportarJSON');
-    const btnImportarJSON = document.getElementById('btnImportarJSON');
-    const inputImportJSON = document.getElementById('inputImportJSON');
-    const btnGerarPDF = document.getElementById('btnGerarPDF');
-
-    const dias = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
-
-    // Gera uma cor aleatória harmônica para matérias
-    function corAleatoria() {
-      const cores = [
-        '#4f46e5', '#2563eb', '#14b8a6', '#059669', '#84cc16',
-        '#facc15', '#f97316', '#ef4444', '#ec4899', '#8b5cf6'
-      ];
-      return cores[Math.floor(Math.random() * cores.length)];
+    function alternarTema() {
+      document.body.classList.toggle('modo-escuro');
+      localStorage.setItem('temaPreferido', document.body.classList.contains('modo-escuro') ? 'escuro' : 'claro');
     }
 
-    // Atualiza o select de código da matéria ao cadastrar uma nova
-    function atualizarSelectCodigo() {
-      selectCodigo.innerHTML = '<option value="">Selecione uma matéria</option>';
-      Object.entries(materias).forEach(([codigo, data]) => {
-        const option = document.createElement('option');
-        option.value = codigo;
-        option.textContent = `${codigo} - ${data.nome}`;
-        selectCodigo.appendChild(option);
+    function salvarDados() { 
+      localStorage.setItem('dadosViveri', JSON.stringify(dadosAgenda)); 
+      atualizarInterface(); 
+    }
+
+    function notificar(mensagem) { 
+      const toast = document.getElementById('toast'); 
+      toast.textContent = mensagem; 
+      toast.classList.add('visivel'); 
+      setTimeout(() => toast.classList.remove('visivel'), 2500); 
+    }
+
+    function adicionarMateria() {
+      const nome = document.getElementById('inputNomeMateria').value.trim();
+      const cor = document.getElementById('inputCorMateria').value;
+      
+      if(!nome) return notificar('Digite o nome da matéria');
+      
+      dadosAgenda.materias[nome] = { cor };
+      document.getElementById('inputNomeMateria').value = '';
+      
+      salvarDados(); 
+      notificar('Matéria criada com sucesso!');
+    }
+
+    function agendarAula() {
+      const materia = document.getElementById('selectMateria').value;
+      const dia = document.getElementById('selectDia').value;
+      const inicio = document.getElementById('inputInicio').value;
+      const fim = document.getElementById('inputFim').value;
+
+      if(!materia || !inicio || !fim) return notificar('Preencha todos os campos');
+      if(inicio >= fim) return notificar('Horário final deve ser maior que o inicial');
+
+      dadosAgenda.aulas.push({ id: Date.now(), materia, dia, inicio, fim });
+      salvarDados(); 
+      notificar('Aula agendada!');
+    }
+
+    function atualizarInterface() {
+      const select = document.getElementById('selectMateria');
+      select.innerHTML = '<option value="">Selecione...</option>';
+      Object.keys(dadosAgenda.materias).forEach(nome => {
+          const opt = document.createElement('option');
+          opt.value = nome;
+          opt.textContent = nome;
+          select.appendChild(opt);
       });
-    }
 
-    // Converte "HH:MM" para minutos totais para cálculo
-    function toMinutes(hhmm) {
-      const [h, m] = hhmm.split(':').map(Number);
-      return h * 60 + m;
-    }
-
-    // Gera uma lista ordenada e única dos horários de início e fim cadastrados, para montar o quadro
-    function gerarHorariosUnicos() {
-      let conjunto = new Set();
-      aulas.forEach(a => {
-        conjunto.add(a.inicio);
-        conjunto.add(a.fim);
+      const containerLegenda = document.getElementById('containerLegenda');
+      containerLegenda.innerHTML = '';
+      Object.entries(dadosAgenda.materias).forEach(([nome, props]) => {
+        containerLegenda.innerHTML += `
+            <div style="font-size:0.85rem; display:flex; align-items:center; gap:6px; background:var(--cor-input); padding:6px 12px; border-radius:20px;">
+                <div style="width:12px;height:12px;border-radius:50%;background:${props.cor}"></div>
+                ${nome}
+            </div>`;
       });
-      const lista = Array.from(conjunto);
-      lista.sort();
-      return lista;
-    }
 
-    // Calcula quantas linhas a aula ocupa, baseado nos horários gerados
-    function calcularLinhas(inicio, fim, horarios) {
-      const ini = toMinutes(inicio);
-      const fi = toMinutes(fim);
-      let cont = 0;
-      for (let i = 0; i < horarios.length -1; i++) {
-        let iniIntervalo = toMinutes(horarios[i]);
-        let fimIntervalo = toMinutes(horarios[i+1]);
-        if (fi <= iniIntervalo) break;
-        if (ini < fimIntervalo && fi > iniIntervalo) cont++;
+      const corpoTabela = document.getElementById('corpoTabela');
+      corpoTabela.innerHTML = '';
+      
+      let horarios = new Set(); 
+      dadosAgenda.aulas.forEach(a => { horarios.add(a.inicio); horarios.add(a.fim); });
+      let horariosOrdenados = Array.from(horarios).sort();
+
+      if (horariosOrdenados.length === 0) {
+          corpoTabela.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:30px; color:var(--cor-texto-sec)">O quadro está vazio. Adicione matérias e aulas!</td></tr>';
+          return;
       }
-      return cont;
-    }
 
-    // Renderiza o quadro de horários dinâmico
-    function renderizarQuadro() {
-      tabelaBody.innerHTML = '';
-
-      const horarios = gerarHorariosUnicos();
-
-      for (let i = 0; i < horarios.length - 1; i++) {
-        const tr = document.createElement('tr');
-
-        // Coluna horário
-        const tdHora = document.createElement('td');
-        tdHora.textContent = horarios[i] + ' - ' + horarios[i+1];
-        tr.appendChild(tdHora);
-
-        // Colunas dias
-        for (let d = 0; d < dias.length; d++) {
-          const td = document.createElement('td');
-          // Verificar se há aula para o dia e horário atual
-          const aulaEncontrada = aulas.find(a => {
-            if (a.dia !== dias[d]) return false;
-            // Comparar se o horário da aula cobre esse intervalo
-            const iniAula = toMinutes(a.inicio);
-            const fimAula = toMinutes(a.fim);
-            const iniIntervalo = toMinutes(horarios[i]);
-            const fimIntervalo = toMinutes(horarios[i+1]);
-            return iniAula < fimIntervalo && fimAula > iniIntervalo;
-          });
-          if (aulaEncontrada) {
-            // Para evitar duplicação, só cria se for o primeiro horário do intervalo da aula
-            const estaInicio = horarios[i] === aulaEncontrada.inicio;
-            if (estaInicio) {
-              const linhas = calcularLinhas(aulaEncontrada.inicio, aulaEncontrada.fim, horarios);
-              td.rowSpan = linhas;
-              const divAula = document.createElement('div');
-              divAula.className = 'aula';
-              divAula.style.backgroundColor = materias[aulaEncontrada.codigo]?.cor || '#4f46e5';
-              divAula.title = `Matéria: ${materias[aulaEncontrada.codigo]?.nome || aulaEncontrada.codigo}\nProfessor: ${aulaEncontrada.professor}`;
-              divAula.textContent = aulaEncontrada.codigo;
-              td.appendChild(divAula);
-              tr.appendChild(td);
-            }
-          } else {
-            // Sem aula
-            tr.appendChild(td);
+      for(let i=0; i<horariosOrdenados.length-1; i++) {
+        const linha = document.createElement('tr');
+        const horaInicio = horariosOrdenados[i];
+        const horaFim = horariosOrdenados[i+1];
+        
+        linha.innerHTML = `<td>${horaInicio} - ${horaFim}</td>`;
+        
+        diasSemana.forEach(dia => {
+          const celula = document.createElement('td');
+          const aulaEncontrada = dadosAgenda.aulas.find(a => a.dia === dia && a.inicio < horaFim && a.fim > horaInicio);
+          
+          if(aulaEncontrada && aulaEncontrada.inicio === horaInicio) {
+             let extensaoLinhas = 0;
+             for(let j=i; j<horariosOrdenados.length-1; j++) {
+               if(horariosOrdenados[j+1] <= aulaEncontrada.fim) extensaoLinhas++; else break;
+             }
+             celula.rowSpan = extensaoLinhas;
+             celula.innerHTML = `
+                <div class="bloco-aula" onclick="abrirModal(${aulaEncontrada.id})" style="background:${dadosAgenda.materias[aulaEncontrada.materia].cor}">
+                    ${aulaEncontrada.materia}
+                </div>`;
+             linha.appendChild(celula);
+          } else if (!aulaEncontrada) {
+             linha.appendChild(celula);
           }
-        }
-
-        tabelaBody.appendChild(tr);
+        });
+        corpoTabela.appendChild(linha);
       }
-      atualizarLegenda();
     }
 
-    // Atualiza a legenda de matérias com suas cores e nomes
-    function atualizarLegenda() {
-      legenda.innerHTML = '';
-      Object.entries(materias).forEach(([codigo, data]) => {
-        const divItem = document.createElement('div');
-        divItem.className = 'legenda-item';
-        const divCor = document.createElement('div');
-        divCor.className = 'legenda-cor';
-        divCor.style.backgroundColor = data.cor;
-        const texto = document.createTextNode(`${codigo} - ${data.nome}`);
-        divItem.appendChild(divCor);
-        divItem.appendChild(texto);
-        legenda.appendChild(divItem);
-      });
+    function abrirModal(id) {
+      const aula = dadosAgenda.aulas.find(x => x.id === id);
+      document.getElementById('tituloModal').textContent = aula.materia;
+      document.getElementById('descricaoModal').innerHTML = `<strong>Dia:</strong> ${aula.dia}<br><strong>Horário:</strong> ${aula.inicio} às ${aula.fim}`;
+      document.getElementById('idAulaSelecionada').value = id;
+      document.getElementById('modalEdicao').style.display = 'flex';
     }
 
-    // Validação simples para adicionar matéria
-    function validarMateria(codigo, nome) {
-      if (!codigo.trim() || !nome.trim()) {
-        alert('Por favor, preencha código e nome da matéria.');
-        return false;
-      }
-      if (materias[codigo]) {
-        alert('Essa matéria já foi cadastrada.');
-        return false;
-      }
-      return true;
+    function fecharModal() { document.getElementById('modalEdicao').style.display = 'none'; }
+
+    function excluirAula() {
+      const id = Number(document.getElementById('idAulaSelecionada').value);
+      dadosAgenda.aulas = dadosAgenda.aulas.filter(a => a.id !== id);
+      fecharModal(); 
+      salvarDados(); 
+      notificar('Aula removida');
     }
 
-    // Evento adicionar matéria
-    btnAdicionarMateria.addEventListener('click', () => {
-      const codigo = codigoMateriaInput.value.toUpperCase().trim();
-      const nome = nomeMateriaInput.value.trim();
-      let cor = corMateriaInput.value.trim();
-
-      if (!validarMateria(codigo, nome)) return;
-
-      if (!cor) cor = corAleatoria();
-
-      materias[codigo] = { nome, cor };
-
-      atualizarSelectCodigo();
-
-      // Limpar campos
-      codigoMateriaInput.value = '';
-      nomeMateriaInput.value = '';
-      corMateriaInput.value = '#4f46e5';
-
-      selectCodigo.value = codigo;
-
-      alert(`Matéria ${codigo} adicionada com sucesso!`);
-    });
-
-    // Validação para aula
-    function validarAula(codigo, professor, dia, inicio, fim) {
-      if (!codigo || !materias[codigo]) {
-        alert('Selecione uma matéria válida.');
-        return false;
-      }
-      if (!professor.trim()) {
-        alert('Informe o nome do professor.');
-        return false;
-      }
-      if (!dia) {
-        alert('Selecione o dia da semana.');
-        return false;
-      }
-      if (!inicio || !fim) {
-        alert('Informe horário de início e término.');
-        return false;
-      }
-      if (toMinutes(fim) <= toMinutes(inicio)) {
-        alert('O horário de término deve ser depois do início.');
-        return false;
-      }
-      return true;
+    function limparTudo() { 
+        if(confirm('Tem certeza que deseja apagar todo o planejamento?')) { 
+            dadosAgenda={materias:{},aulas:[]}; 
+            salvarDados(); 
+            notificar('Tudo limpo!');
+        } 
     }
 
-    // Adicionar aula
-    btnAdicionarAula.addEventListener('click', () => {
-      const codigo = selectCodigo.value;
-      const professor = professorInput.value.trim();
-      const dia = diaSemanaSelect.value;
-      const inicio = inicioAulaInput.value;
-      const fim = fimAulaInput.value;
+    function exportarJSON() {
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(new Blob([JSON.stringify(dadosAgenda)],{type:'application/json'}));
+      link.download = 'backup_plan.json'; 
+      link.click();
+    }
 
-      if (!validarAula(codigo, professor, dia, inicio, fim)) return;
-
-      aulas.push({ codigo, professor, dia, inicio, fim });
-      alert(`Aula de ${codigo} adicionada na ${dia} das ${inicio} às ${fim}`);
-
-      // Limpar campos
-      professorInput.value = '';
-      diaSemanaSelect.value = '';
-      inicioAulaInput.value = '';
-      fimAulaInput.value = '';
-
-      renderizarQuadro();
-    });
-
-    // Exportar JSON
-    btnExportarJSON.addEventListener('click', () => {
-      const data = { materias, aulas };
-      const jsonStr = JSON.stringify(data, null, 2);
-      const blob = new Blob([jsonStr], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'quadro_horarios.json';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    });
-
-    // Importar JSON
-    btnImportarJSON.addEventListener('click', () => {
-      inputImportJSON.click();
-    });
-
-    inputImportJSON.addEventListener('change', () => {
-      const arquivo = inputImportJSON.files[0];
-      if (!arquivo) return;
+    function importarJSON(input) {
       const leitor = new FileReader();
-      leitor.onload = e => {
-        try {
-          const dados = JSON.parse(e.target.result);
-          if (!dados.materias || !dados.aulas) throw new Error('Arquivo JSON inválido.');
-          materias = dados.materias;
-          aulas = dados.aulas;
-
-          atualizarSelectCodigo();
-          renderizarQuadro();
-          alert('Dados importados com sucesso!');
-        } catch (err) {
-          alert('Erro ao importar JSON: ' + err.message);
-        }
+      leitor.onload = (e) => { 
+          try {
+            dadosAgenda = JSON.parse(e.target.result); 
+            salvarDados(); 
+            notificar('Dados restaurados com sucesso!'); 
+          } catch(err) { notificar('Erro no arquivo'); }
       };
-      leitor.readAsText(arquivo);
-    });
+      leitor.readAsText(input.files[0]);
+    }
 
-    // Gerar PDF usando jsPDF + autotable
-    btnGerarPDF.addEventListener('click', () => {
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF('landscape', 'pt', 'a4');
-      doc.setFontSize(16);
-      doc.setTextColor(34, 53, 30);
-      doc.text('Quadro de Horários', 40, 40);
+    async function exportarImagem() {
+      notificar('Gerando imagem...');
+      const canvas = await html2canvas(document.getElementById('areaCaptura'), { scale: 2, backgroundColor: window.getComputedStyle(document.body).backgroundColor });
+      const link = document.createElement('a'); 
+      link.href=canvas.toDataURL(); 
+      link.download='meu_horario.png'; 
+      link.click();
+    }
 
-      // Construir cabeçalho
-      const header = ['Horário', ...dias];
-
-      // Construir dados da tabela
-      const horarios = gerarHorariosUnicos();
-      const body = [];
-
-      for (let i = 0; i < horarios.length - 1; i++) {
-        const linha = [];
-        linha.push(horarios[i] + ' - ' + horarios[i+1]);
-        for (let d = 0; d < dias.length; d++) {
-          // procurar aula no intervalo
-          const aulaEncontrada = aulas.find(a => {
-            if (a.dia !== dias[d]) return false;
-            const iniAula = toMinutes(a.inicio);
-            const fimAula = toMinutes(a.fim);
-            const iniIntervalo = toMinutes(horarios[i]);
-            const fimIntervalo = toMinutes(horarios[i+1]);
-            return iniAula < fimIntervalo && fimAula > iniIntervalo;
-          });
-          if (aulaEncontrada && horarios[i] === aulaEncontrada.inicio) {
-            const nomeMat = materias[aulaEncontrada.codigo]?.nome || aulaEncontrada.codigo;
-            linha.push(aulaEncontrada.codigo + '\n' + nomeMat + '\nProf: ' + aulaEncontrada.professor);
-          } else {
-            linha.push('');
-          }
-        }
-        body.push(linha);
-      }
-
-      doc.autoTable({
-        head: [header],
-        body: body,
-        startY: 60,
-        styles: {
-          font: 'helvetica',
-          fontSize: 8,
-          cellPadding: 4,
-          textColor: [40, 60, 30],
-          halign: 'center',
-          valign: 'middle',
-        },
-        headStyles: {
-          fillColor: [147, 166, 118],
-          textColor: 255,
-          fontStyle: 'bold',
-        },
-        alternateRowStyles: {
-          fillColor: [220, 230, 210],
-        },
-        margin: { left: 40, right: 40 },
-        tableWidth: 'auto',
-      });
-
-      doc.save('quadro_horarios.pdf');
-    });
-
+    function exportarPDF() {
+      const { jsPDF } = window.jspdf; 
+      const doc = new jsPDF('l','pt','a4');
+      doc.text('Meu Planejamento', 40, 40);
+      doc.autoTable({ html: '#tabelaPrincipal', startY: 60, theme:'grid' }); 
+      doc.save('horario_plan.pdf');
+    }
   </script>
 </body>
 </html>
+
+
+
