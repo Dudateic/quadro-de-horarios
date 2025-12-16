@@ -2,6 +2,8 @@
 
 > Um organizador de rotina minimalista, orgânico e fluido, focado na visualização clara da sua semana.
 
+### 🚀 [Clique aqui para acessar o Quadro Online](https://dudateic.github.io/quadro-de-horarios/)
+
 O **Quadro de Horários** é uma aplicação web de página única (SPA) desenvolvida para gerenciar cronogramas acadêmicos e pessoais. Com um design "soft-ui", ele oferece uma experiência livre de distrações, permitindo criar matérias, agendar aulas e exportar seu planejamento facilmente.
 
 ---
