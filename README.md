@@ -1,7 +1,5 @@
 # 📅 Quadro de Horários Acadêmico
 
----
-
 ## 📝 Descrição
 
 Este projeto foi desenvolvido para fins educativos, com o objetivo de ajudar estudantes a organizar seus horários de aulas e matérias de forma prática e visual.
