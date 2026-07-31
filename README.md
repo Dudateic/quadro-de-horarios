@@ -83,4 +83,4 @@ O projeto foi desenvolvido com foco no aprendizado de **desenvolvimento Front-En
 O projeto foi desenvolvido com finalidade educacional e acadêmica, servindo como estudo prático de desenvolvimento web, interfaces interativas e conceitos fundamentais de Front-End.
 
 ---
-<p align="center"> Quadro de Horários · Projeto Acadêmico · 2026 </p> ```
+<p align="center"> Quadro de Horários · Projeto Acadêmico · 2026 </p>
