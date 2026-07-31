@@ -1,68 +1,86 @@
-<h1 align="center">Quadro de Horários</h1>
-
-<p align="center">
-</p>
-
-<p align="center">
-  <a href="https://dudateic.github.io/quadro-de-horarios/" target="_blank" style="text-decoration:none;">
-    <img src="https://img.shields.io/badge/Acessar%20Quadro-Online-4CAF50?style=for-the-badge&logo=Google-Chrome&logoColor=white" alt="Acessar Quadro de Horários Online">
-  </a>
-</p>
-
 <div align="center">
-  <img src="https://img.shields.io/badge/HTML5-%23E34F26?style=for-the-badge&logo=html5&logoColor=white" alt="HTML5"/>
-  <img src="https://img.shields.io/badge/CSS3-%231572B6?style=for-the-badge&logo=css3&logoColor=white" alt="CSS3"/>
-  <img src="https://img.shields.io/badge/JavaScript-ES6+-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" alt="JavaScript"/>
-  <img src="https://img.shields.io/badge/Responsive-Design-FF69B4?style=for-the-badge" alt="Responsive"/>
-  <img src="https://img.shields.io/badge/SoftUI-Design-87CEEB?style=for-the-badge" alt="SoftUI"/>
-  <img src="https://img.shields.io/badge/SPA-Single%20Page%20Application-6A5ACD?style=for-the-badge" alt="SPA"/>
+
+# Quadro de Horários
+
+> SPA desenvolvida para gerenciamento de cronogramas acadêmicos e pessoais, aplicando conceitos de desenvolvimento Front-End, manipulação do DOM e UX/UI Design.
+
+![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat-square&logo=html5&logoColor=white)
+![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=flat-square&logo=css3&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-F7DF1E?style=flat-square&logo=javascript&logoColor=black)
+![Responsive](https://img.shields.io/badge/Design-Responsivo-FF69B4?style=flat-square)
+![SPA](https://img.shields.io/badge/Arquitetura-SPA-6A5ACD?style=flat-square)
+![Status](https://img.shields.io/badge/status-finalizado-brightgreen?style=flat-square)
+
 </div>
 
 ---
 
-## Descrição
-
-O **Quadro de Horários** é uma **SPA (Single Page Application)** desenvolvida para gerenciar cronogramas acadêmicos e pessoais. Com um design **soft-ui**, proporciona uma experiência limpa e fluida, permitindo criar matérias, agendar aulas e exportar o planejamento facilmente.  
-
-O foco principal do projeto é **aprendizado de front-end**, trabalhando com **HTML, CSS, JavaScript**, manipulação do **DOM** e **UX/UI design**.
-
----
-
-## Funcionalidades
-
-- **Design Orgânico & Fluido:** Interface limpa com animações suaves e paleta de cores relaxante.  
-- **Modo Escuro/Claro:** Alternância de tema com persistência automática das preferências do usuário.  
-- **Gestão de Aulas:**  
-  - Criação de matérias com cores personalizadas.  
-  - Agendamento visual que detecta conflitos de horário automaticamente.  
-  - Edição e exclusão interativa (clique na aula para detalhes).  
-- **Painel de Ferramentas:**  
-  - Exportar como **Imagem (PNG)**  
-  - Exportar como **PDF**  
+<p align="center">
+  <a href="https://dudateic.github.io/quadro-de-horarios/" target="_blank">
+    <img src="https://img.shields.io/badge/Acessar%20Quadro-Online-4CAF50?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Acessar Quadro de Horários">
+  </a>
+</p>
 
 ---
 
-## Tecnologias e Conceitos Aprendidos
+## Sumário
 
-- **HTML5:** marcação semântica e acessível  
-- **CSS3:** Flexbox, Grid, Media Queries, Custom Properties  
-- **JavaScript (ES6+):** DOM, Eventos, Funções, Classes  
-- **SPA:** navegação dinâmica sem reload  
-- **Soft-UI & UX Design:** interfaces intuitivas e agradáveis  
-- **Responsive Design:** adaptável a diferentes dispositivos e tamanhos de tela  
-- **Exportação de dados:** PNG e PDF  
+- [01 · Visão Geral](#01--visão-geral)
+- [02 · Funcionalidades](#02--funcionalidades)
+- [03 · Tecnologias e Conceitos](#03--tecnologias-e-conceitos)
+- [04 · Considerações Finais](#04--consideracoes-finais)
+
 
 ---
 
-## Benefícios do Aprendizado
+# 01 · Visão Geral
 
-- Prática em **desenvolvimento front-end**  
-- Experiência com **interfaces interativas e dinâmicas**  
-- Melhoria em **UX/UI** e design responsivo  
+O **Quadro de Horários** é uma aplicação web desenvolvida como uma **SPA (Single Page Application)** para organização de cronogramas acadêmicos e pessoais.
+
+A aplicação permite criar disciplinas, organizar horários de aulas e visualizar a rotina semanal através de uma interface dinâmica e responsiva.
+
+O projeto foi desenvolvido com foco no aprendizado de **desenvolvimento Front-End**, explorando:
+
+- Manipulação do DOM
+- Eventos em JavaScript
+- Organização de componentes
+- Responsividade
+- Experiência do usuário (UX/UI)
 
 ---
 
-## Considerações Finais
+# 02 · Funcionalidades
 
-O projeto foi desenvolvido **estritamente para fins educacionais e acadêmicos**, servindo como objeto de estudo sobre desenvolvimento web e conceitos de front-end.
+| Funcionalidade | Descrição |
+|---|---|
+| Criação de matérias | Cadastro de disciplinas com identificação visual por cores |
+| Organização semanal | Visualização das aulas distribuídas por dia e horário |
+| Detecção de conflitos | Identificação automática de horários duplicados |
+| Edição de aulas | Alteração das informações cadastradas |
+| Exclusão de aulas | Remoção de atividades do cronograma |
+| Tema claro/escuro | Alternância de tema com persistência das preferências |
+| Exportação PNG | Geração da imagem do quadro de horários |
+| Exportação PDF | Conversão do planejamento para documento |
 
+---
+
+# 03 · Tecnologias e Conceitos
+
+| Tecnologia | Aplicação |
+|---|---|
+| HTML5 | Estrutura semântica da aplicação |
+| CSS3 | Estilização, Grid, Flexbox e responsividade |
+| JavaScript ES6+ | Lógica, eventos e manipulação dinâmica |
+| DOM API | Atualização dos elementos da interface |
+| LocalStorage | Persistência dos dados do usuário |
+| SPA | Navegação dinâmica sem recarregamento |
+| UX/UI Design | Construção de uma interface intuitiva |
+
+---
+
+# 04 · Considerações Finais
+
+O projeto foi desenvolvido com finalidade educacional e acadêmica, servindo como estudo prático de desenvolvimento web, interfaces interativas e conceitos fundamentais de Front-End.
+
+---
+<p align="center"> Quadro de Horários · Projeto Acadêmico · 2026 </p> ```
